@@ -1,18 +1,18 @@
-# fairy-tale-hero
+# audiocube
 
-Python-Skript, um die auf der Speicherkarte des Audio-Cubes enthaltenen Sound-Dateien zu ver-/entschlüsseln.
+Tools for and information about the Audio-Cube.
 
-## Verwendung
+## audiocube.py
 
 ```sh
-$ ./fairy-tale-hero.py --help
-usage: fairy-tale-hero.py [-h] input_file output_file
+$ ./audiocube.py --help
+usage: audiocube.py [-h] input_file output_file
 
-Ver-/Entschlüsselt Sound-Dateien für den "Audio-Cube"
+En-/Decode Audio-Cube sound files
 
 positional arguments:
-  input_file   Pfad zur Eingabedatei (oder "-" für STDIN)
-  output_file  Pfad zur Ausgabedatei (oder "-" für STDOUT)
+  input_file   The input file name/path (or "-" for STDIN)
+  output_file  The output file name/path (or "-" for STDOUT)
 
 optional arguments:
   -h, --help   show this help message and exit
@@ -20,4 +20,4 @@ optional arguments:
 
 ## Credits
 
-"**Marc D.**" hat binnen weniger Stunden alle relevanten Informationen zum Audio-Cube herausgefunden und [veröffentlicht](https://www.mikrocontroller.net/topic/503014).
+"**Marc D.**" figured out and [published](https://www.mikrocontroller.net/topic/503014) all relevant information about the Audio-Cube.
