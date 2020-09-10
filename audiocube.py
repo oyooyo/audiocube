@@ -10,7 +10,7 @@ KEY = bytes([0x51, 0x23, 0x98, 0x56])
 KEY_LENGTH = len(KEY)
 
 # The default chunk size for reading/writing files
-DEFAULT_CHUNK_SIZE = (1024 * 64)
+DEFAULT_CHUNK_SIZE = (1024 * 1024)
 
 # Returns <value> if <value> is not None, <default_value> otherwise
 def value_with_default(value, default_value):
@@ -41,18 +41,18 @@ def encode_or_decode_file(input_file, output_file, chunk_size=None):
 if __name__ == '__main__':
 	import argparse
 	argument_parser = argparse.ArgumentParser(
-		description = 'Ver-/Entschlüsselt Sound-Dateien für den "Audio-Cube"',
+		description = 'En-/Decode Audio-Cube sound files',
 		formatter_class = argparse.ArgumentDefaultsHelpFormatter,
 	)
 	argument_parser.add_argument(
 		'input_file',
 		type = argparse.FileType('rb'),
-		help = 'Pfad zur Eingabedatei (oder "-" für STDIN)',
+		help = 'The input file name/path (or "-" for STDIN)',
 	)
 	argument_parser.add_argument(
 		'output_file',
 		type = argparse.FileType('wb'),
-		help = 'Pfad zur Ausgabedatei (oder "-" für STDOUT)',
+		help = 'The output file name/path (or "-" for STDOUT)',
 	)
 	arguments = argument_parser.parse_args()
 
