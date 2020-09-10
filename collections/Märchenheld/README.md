@@ -39,7 +39,20 @@ Der Schuster und die Wichtelmänner | 0044 | TMB01/T0044.smp | 13148881 | ? | ? 
 
 Zu jedem Märchen gibt es eine zugehörige Figur - wird diese auf den Audiocube gestellt, so wird das entsprechende Märchen abgespielt. Technisch funktioniert dies, indem jede Figur im Sockel unter der Fuss der Figur ein "*Mifare Classic 1k*"-NFC-Tag enthält, auf dem die ID des zugehörigen Märchens gespeichert ist.
 
-Diese NFC-Tags können auch selbst hergestellt werden, z.B. wenn eine Figur einmal kaputt oder verloren gehen sollte. Im Order [nfc](nfc/) finden Sie für jedes Märchen eine `.mct`-Datei, die Sie mittels der kostenlosen Android-App "[MIFARE Classic Tool - MCT](https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool)" auf ein geeignetes *"Mifare Classic 1k"*-NFC-Tag kopieren können, falls Sie ein NFC-fähiges Android-Smartphone besitzen.
+Diese NFC-Tags können auch selbst hergestellt werden, z.B. wenn eine Figur einmal kaputt oder verloren gehen sollte. Im Order [nfc](nfc/) finden Sie für jedes Märchen eine `.mct`-Datei, die Sie mittels der kostenlosen Android-App "[MIFARE Classic Tool - MCT](https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool)" auf ein geeignetes *"Mifare Classic 1k"*-NFC-Tag kopieren können, falls Sie ein NFC-fähiges Android-Smartphone besitzen. 
+
+Gehen Sie dazu folgendermassen vor:
+
+1. Kopieren Sie die `.mct`-Dateien aus dem [nfc](nfc/)-Order in das Verzeichnis `/sdcard/MifareClassicTool/dump-files/` ihres Android-Smartphones
+2. Öffnen Sie die *MIFARE Classic Tool*-App
+3. Wählen Sie "*Write Tag*"
+4. Wählen Sie "*Write Dump (Clone)*"
+5. Klicken Sie auf "*Select Dump*"
+6. Wählen Sie die `.mct`-Datei des gewünschten Märchens
+7. Klicken Sie auf "*Select Dump*"
+8. Halten Sie das `*Mifare Classic 1k*`-NFC-Tag, das Sie beschreiben wollen, an die Stelle ihres Smartphones, an der sich der NFC-Reader befindet. Ein Ton sollte erklingen und "*New Tag found (UID:xxxxxxxx)*" eingeblendet werden
+9. Belassen Sie das zu beschreibende NFC-Tag in dieser Position, und klicken Sie auf "*OK*"
+10. Klicken Sie auf "*Select all*", dann auf "*Start mapping and write dump*"
 
 ## Speicherkarte
 
