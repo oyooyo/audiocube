@@ -50,7 +50,7 @@ Gehen Sie dazu folgendermassen vor:
 5. Klicken Sie auf "*Select Dump*"
 6. Wählen Sie die `.mct`-Datei des gewünschten Märchens
 7. Klicken Sie auf "*Select Dump*"
-8. Halten Sie das `*Mifare Classic 1k*`-NFC-Tag, das Sie beschreiben wollen, an die Stelle ihres Smartphones, an der sich der NFC-Reader befindet. Ein Ton sollte erklingen und "*New Tag found (UID:xxxxxxxx)*" eingeblendet werden
+8. Halten Sie das "*Mifare Classic 1k*"-NFC-Tag, das Sie beschreiben wollen, an die Stelle ihres Smartphones, an der sich der NFC-Reader befindet. Ein Ton sollte erklingen und "*New Tag found (UID:xxxxxxxx)*" eingeblendet werden
 9. Belassen Sie das zu beschreibende NFC-Tag in dieser Position, und klicken Sie auf "*OK*"
 10. Klicken Sie auf "*Select all*", dann auf "*Start mapping and write dump*"
 
