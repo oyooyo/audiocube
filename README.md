@@ -27,12 +27,12 @@ optional arguments:
   -h, --help   show this help message and exit
 ```
 
-Usage example: Encrypting a MP3 file named `foo.mp3` to an Audio-Cube-compatible `.smp` file with ID 3:
+Usage example: Convert a MP3 file named `foo.mp3` to an Audio-Cube-compatible `.smp` file with ID 3:
 ```sh
 $ audiocube.py convert_file foo.mp3 T0003.smp
 ```
 
-Usage example: Decrypting an Audio-Cube-compatible `.smp` file with ID 39 to a MP3 file named `bar.mp3`:
+Usage example: Convert an Audio-Cube-compatible `.smp` file with ID 39 to a MP3 file named `bar.mp3`:
 ```sh
 $ audiocube.py convert_file T0039.smp bar.mp3
 ```
