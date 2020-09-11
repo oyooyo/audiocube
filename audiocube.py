@@ -39,13 +39,13 @@ def crypt_chunks(chunks_iterator):
 		offset += len(chunk)
 
 # Encrypts or decrypts the sound file <input_file> and writes the output to file <output_file>
-def crypt_file(input_file, output_file, chunk_size=None):
+def convert_file(input_file, output_file, chunk_size=None):
 	for crypted_chunk in crypt_chunks(read_file_in_chunks(input_file=input_file, chunk_size=chunk_size)):
 		output_file.write(crypted_chunk)
 
 # Encrypts or decrypts a sound file
-def crypt_file_command(args):
-	crypt_file(input_file=args.input_file, output_file=args.output_file)
+def convert_file_command(args):
+	convert_file(input_file=args.input_file, output_file=args.output_file)
 
 # Generator function that slices <sliceable> into equal-sized chunks of size <chunk_size>
 def generate_chunks(sliceable, chunk_size):
@@ -82,23 +82,23 @@ if __name__ == '__main__':
 		help = 'The action to perform',
 	)
 
-	# Set up the "crypt_file" action/subcommand
-	crypt_file_parser = subparsers.add_parser(
-		'crypt_file',
+	# Set up the "convert_file" action/subcommand
+	convert_file_parser = subparsers.add_parser(
+		'convert_file',
 		description = 'Encrypt/decrypt a sound file',
 		formatter_class = argparse.ArgumentDefaultsHelpFormatter,
 	)
-	crypt_file_parser.add_argument(
+	convert_file_parser.add_argument(
 		'input_file',
 		type = argparse.FileType('rb'),
 		help = 'the input file to read from ("-" for STDIN)',
 	)
-	crypt_file_parser.add_argument(
+	convert_file_parser.add_argument(
 		'output_file',
 		type = argparse.FileType('wb'),
 		help = 'the output file to write to ("-" for STDOUT)',
 	)
-	crypt_file_parser.set_defaults(func=crypt_file_command)
+	convert_file_parser.set_defaults(func=convert_file_command)
 
 	# Set up the "nfc_content" action/subcommand
 	nfc_content = subparsers.add_parser(

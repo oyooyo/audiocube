@@ -8,14 +8,14 @@ In Germany, the "*Audio-Cube*" is sold as part of the "*[Märchenheld](collectio
 
 *audiocube.py* is a tiny toolbox for the Audio-Cube, providing the following features:
 
-- Encrypt/decrypt audio files to be used by the Audio-Cube
+- Convert audio files to be used by the Audio-Cube
 - Create `.mct` files suitable for the free Android app "[MIFARE Classic Tool - MCT](https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool)", allowing to create NFC tags that are compatible with the Audio-Cube
 
-### Encrypt/decrypt audio files to be used by the Audio-Cube
+### Convert audio files to be used by the Audio-Cube
 
 ```sh
-$ audiocube.py crypt_file -h
-usage: audiocube.py crypt_file [-h] input_file output_file
+$ audiocube.py convert_file -h
+usage: audiocube.py convert_file [-h] input_file output_file
 
 Encrypt/decrypt a sound file
 
@@ -29,12 +29,12 @@ optional arguments:
 
 Usage example: Encrypting a MP3 file named `foo.mp3` to an Audio-Cube-compatible `.smp` file with ID 3:
 ```sh
-$ audiocube.py crypt_file foo.mp3 T0003.smp
+$ audiocube.py convert_file foo.mp3 T0003.smp
 ```
 
 Usage example: Decrypting an Audio-Cube-compatible `.smp` file with ID 39 to a MP3 file named `bar.mp3`:
 ```sh
-$ audiocube.py crypt_file T0039.smp bar.mp3
+$ audiocube.py convert_file T0039.smp bar.mp3
 ```
 
 ### Create `.mct` files
