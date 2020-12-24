@@ -1,131 +1,154 @@
 #!/usr/bin/env python3
 
-# The key with which the sound files are encoded (XORed)
-CRYPT_KEY = bytes([0x51, 0x23, 0x98, 0x56])
+CHUNK_SIZE = 0x10000
 
-# Length of the key, in bytes
-CRYPT_KEY_LENGTH = len(CRYPT_KEY)
-
-# The default chunk size for reading/writing files
-DEFAULT_CHUNK_SIZE = (1024 * 1024)
-
-# The bytes in a Mifare Classic sector trailer block
-SECTOR_TRAILER_BLOCK_BYTES = bytes([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
-
-# The bytes in a Mifare Classic block that only contains zeros
-ZERO_BLOCK_BYTES = bytes(16)
-
-# The string to use for newlines
-NEWLINE = '\n'
-
-# Returns <value> if <value> is not None, <default_value> otherwise
-def value_with_default(value, default_value):
-	return (value if (value is not None) else default_value)
-
-# Generator function that reads binary file <input_file> and yields chunks of size <chunk_size> (default: DEFAULT_CHUNK_SIZE)
-def read_file_in_chunks(input_file, chunk_size=None):
-	chunk_size = value_with_default(chunk_size, DEFAULT_CHUNK_SIZE)
+def read_file_in_chunks(input_file):
 	while True:
-		chunk = input_file.read(chunk_size)
+		chunk = input_file.read(CHUNK_SIZE)
 		if (not chunk):
 			break
 		yield chunk
 
-# Generator function that encrypts or decrypts chunks from the iterator <chunks_iterator>
-def crypt_chunks(chunks_iterator):
+def convert_file(input_file, output_file, convert_byte_function):
 	offset = 0
-	for chunk in chunks_iterator:
-		yield bytes((chunk[chunk_byte_index] ^ CRYPT_KEY[(offset + chunk_byte_index) % CRYPT_KEY_LENGTH]) for chunk_byte_index in range(len(chunk)))
-		offset += len(chunk)
+	for input_file_chunk in read_file_in_chunks(input_file):
+		output_file_chunk = bytearray()
+		for input_byte in input_file_chunk:
+			output_byte = convert_byte_function(input_byte, offset)
+			output_file_chunk.append(output_byte)
+			offset += 1
+		output_file.write(output_file_chunk)
 
-# Encrypts or decrypts the sound file <input_file> and writes the output to file <output_file>
-def convert_file(input_file, output_file, chunk_size=None):
-	for crypted_chunk in crypt_chunks(read_file_in_chunks(input_file=input_file, chunk_size=chunk_size)):
-		output_file.write(crypted_chunk)
+def convert_file_path(input_file_path, output_file_path, convert_byte_function):
+	with open(input_file_path, 'rb') as input_file:
+		with open(output_file_path, 'wb') as output_file:
+			convert_file(input_file, output_file, convert_byte_function)
 
-# Encrypts or decrypts a sound file
-def convert_file_command(args):
-	convert_file(input_file=args.input_file, output_file=args.output_file)
+def convert_file_paths(input_file_paths, output_file_pattern, convert_byte_function):
+	from os import path
+	for input_file_path in input_file_paths:
+		input_file_path_without_extension, input_file_extension = path.splitext(input_file_path)
+		output_file_path = output_file_pattern.format(
+			name = input_file_path_without_extension,
+			extension = input_file_extension,
+		)
+		print(f'"{input_file_path}" -> "{output_file_path}"')
+		convert_file_path(input_file_path, output_file_path, convert_byte_function)
 
-# Generator function that slices <sliceable> into equal-sized chunks of size <chunk_size>
-def generate_chunks(sliceable, chunk_size):
-	for index in range(0, len(sliceable), chunk_size):
-		yield sliceable[index:(index + chunk_size)]
+def rotate_byte_left(byte, number_of_bits):
+	number_of_bits = (number_of_bits % 8)
+	return (byte if (number_of_bits == 0) else  (((byte << number_of_bits) | (byte >> (8 - number_of_bits))) & 0xFF))
 
-# Convert the content of a Mifare Classic NFC tag <nfc_bytes> into the content of a .mct file
-def create_mct(nfc_bytes):
-	return NEWLINE.join(f"+Sector: {sector_index}{NEWLINE}{NEWLINE.join(block_bytes.hex().upper() for block_bytes in generate_chunks(sector_bytes, 16))}" for sector_index, sector_bytes in enumerate(generate_chunks(nfc_bytes, 64)))
+def rotate_byte_right(byte, number_of_bits):
+	return rotate_byte_left(byte, -number_of_bits)
 
-# Create the content of a Mifare Classic NFC tag for an audio file with directory ID <directory_id> and file ID <file_id>
-def create_nfc_bytes(directory_id, file_id):
-	id_block_bytes = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x19, 0x01, 0x01, directory_id, (file_id >> 8), (file_id & 0xFF)])
-	return (ZERO_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES)
+def add_input_file_paths_argument(argument_parser):
+	argument_parser.add_argument(
+		'input_file_paths',
+		metavar = 'input_file',
+		nargs = '+',
+		type = str,
+		help = 'The input file(s) to read from',
+	)
 
-# Create a Mifare Classic NFC tag content file
-def nfc_content_command(args):
-	nfc_bytes = create_nfc_bytes(directory_id=int(args.directory_id, 16), file_id=int(args.file_id, 16))
-	args.output_file.write(create_mct(nfc_bytes))
+def add_output_file_pattern_argument(argument_parser, default_extension):
+	argument_parser.add_argument(
+		'--output_file_pattern', '-ofp',
+		type = str,
+		default = f'{{name}}{default_extension}',
+		help = 'Pattern for the output filenames',
+	)
+
+class Device_Type:
+	def __init__(self, id, name):
+		self.id = id
+		self.name = name
+
+class Encrypted_File_Device_Type(Device_Type):
+	def __init__(self, id, name, encrypted_file_extension, decrypted_file_extension):
+		super().__init__(id, name)
+		self.encrypted_file_extension = encrypted_file_extension
+		self.decrypted_file_extension = decrypted_file_extension
+	def encrypt_byte(self, input_byte, offset):
+		raise NotImplementedError('encrypt_byte() not implemented')
+	def encrypt(self, args):
+		convert_file_paths(args.input_file_paths, args.output_file_pattern, self.encrypt_byte)
+	def decrypt_byte(self, input_byte, offset):
+		raise NotImplementedError('decrypt_byte() not implemented')
+	def decrypt(self, args):
+		convert_file_paths(args.input_file_paths, args.output_file_pattern, self.decrypt_byte)
+	def add_commands(self, command_subparsers):
+		encrypt_argument_parser = command_subparsers.add_parser(
+			'encrypt',
+			description = f'Encrypt audio file(s)',
+			formatter_class = ArgumentDefaultsHelpFormatter,
+		)
+		add_input_file_paths_argument(encrypt_argument_parser)
+		add_output_file_pattern_argument(encrypt_argument_parser, self.encrypted_file_extension)
+		encrypt_argument_parser.set_defaults(func=self.encrypt)
+		decrypt_argument_parser = command_subparsers.add_parser(
+			'decrypt',
+			description = f'Decrypt audio file(s)',
+			formatter_class = ArgumentDefaultsHelpFormatter,
+		)
+		add_input_file_paths_argument(decrypt_argument_parser)
+		add_output_file_pattern_argument(decrypt_argument_parser, self.decrypted_file_extension)
+		decrypt_argument_parser.set_defaults(func=self.decrypt)
+
+class Simple_Encrypted_File_Device_Type(Encrypted_File_Device_Type):
+	def __init__(self, id, name, encrypted_file_extension, decrypted_file_extension, xor_key, rotate_bits):
+		super().__init__(id, name, encrypted_file_extension, decrypted_file_extension)
+		self.xor_key = bytes(xor_key)
+		self.rotate_bits = rotate_bits
+		self.xor_key_length = len(xor_key)
+	def encrypt_byte(self, input_byte, offset):
+		return (rotate_byte_right(input_byte, self.rotate_bits) ^ self.xor_key[offset % self.xor_key_length])
+	def decrypt_byte(self, input_byte, offset):
+		return rotate_byte_left((input_byte ^ self.xor_key[offset % self.xor_key_length]), self.rotate_bits)
+
+class Audiocube(Simple_Encrypted_File_Device_Type):
+	def __init__(self):
+		super().__init__('audiocube', 'Audiocube', '.SMP', '.mp3', [0x51, 0x23, 0x98, 0x56], 0)
+
+class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
+	def __init__(self):
+		super().__init__('storyland', 'LIDL Storyland', '.SMP', '.mp3', [0x01, 0x80, 0x04, 0x04], 3)
+
+class Migros_Storybox(Simple_Encrypted_File_Device_Type):
+	def __init__(self):
+		super().__init__('hoerbox', 'Migros Storybox', '.smp', '.mp3', [0x66], 0)
+
+DEVICE_TYPES = [
+	Audiocube(),
+	LIDL_Storyland(),
+	Migros_Storybox(),
+]
 
 # ----
 # MAIN
 # ----
 if __name__ == '__main__':
-	# Set up the argument parser
-	import argparse
-	argument_parser = argparse.ArgumentParser(
-		description = 'Toolbox for Audio-Cube',
-		formatter_class = argparse.ArgumentDefaultsHelpFormatter,
+	from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+	argument_parser = ArgumentParser(
+		description = 'Toolbox for Audio-Cubes. For more information, see https://github.com/oyooyo/audiocube',
+		formatter_class = ArgumentDefaultsHelpFormatter,
 	)
-	subparsers = argument_parser.add_subparsers(
+	device_type_subparsers = argument_parser.add_subparsers(
 		required = True,
-		dest = 'action',
-		help = 'The action to perform',
+		dest = 'device_type',
+		help = 'The device type',
 	)
-
-	# Set up the "convert_file" action/subcommand
-	convert_file_parser = subparsers.add_parser(
-		'convert_file',
-		description = 'Encrypt/decrypt a sound file',
-		formatter_class = argparse.ArgumentDefaultsHelpFormatter,
-	)
-	convert_file_parser.add_argument(
-		'input_file',
-		type = argparse.FileType('rb'),
-		help = 'the input file to read from ("-" for STDIN)',
-	)
-	convert_file_parser.add_argument(
-		'output_file',
-		type = argparse.FileType('wb'),
-		help = 'the output file to write to ("-" for STDOUT)',
-	)
-	convert_file_parser.set_defaults(func=convert_file_command)
-
-	# Set up the "nfc_content" action/subcommand
-	nfc_content = subparsers.add_parser(
-		'nfc_content',
-		description = 'Generate a .mct NFC tag content file',
-		formatter_class = argparse.ArgumentDefaultsHelpFormatter,
-	)
-	nfc_content.add_argument(
-		'directory_id',
-		type = str,
-		nargs = '?',
-		default = '01',
-		help = 'The directory ID, a hexadecimal string in range 00...FF',
-	)
-	nfc_content.add_argument(
-		'file_id',
-		type = str,
-		help = 'The file ID, a hexadecimal string in range 0000...FFFF',
-	)
-	nfc_content.add_argument(
-		'output_file',
-		type = argparse.FileType('w'),
-		help = 'the output file to write to ("-" for STDOUT)',
-	)
-	nfc_content.set_defaults(func=nfc_content_command)
-
-	# Parse the arguments
+	for device_type in DEVICE_TYPES:
+		device_type_argument_parser = device_type_subparsers.add_parser(
+			device_type.id,
+			description = f'Toolbox for "{device_type.name}"',
+			formatter_class = ArgumentDefaultsHelpFormatter,
+		)
+		device_type_command_subparsers = device_type_argument_parser.add_subparsers(
+			required = True,
+			dest = 'command',
+			help = 'The command to execute',
+		)
+		device_type.add_commands(device_type_command_subparsers)
 	args = argument_parser.parse_args()
-	# If there was no error parsing the arguments, perform the chosen action/subcommand
 	args.func(args)
