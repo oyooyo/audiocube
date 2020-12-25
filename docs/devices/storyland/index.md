@@ -1,5 +1,7 @@
 # LIDL Storyland
 
+![lidl_storyland-image-0004-512x512](lidl_storyland-image-0004-512x512.jpg)
+
 The "[LIDL Storyland](https://www.lidl-hellas.gr/storyland)" is a device sold in greek LIDL stores for 9,99 €. Figures are sold separately for 1,99 € each.
 
 ## Program usage
