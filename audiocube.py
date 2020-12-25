@@ -63,6 +63,8 @@ class Device_Type:
 	def __init__(self, id, name):
 		self.id = id
 		self.name = name
+	def add_commands(self, command_subparsers):
+		raise NotImplementedError('add_commands() not implemented')
 
 class Encrypted_File_Device_Type(Device_Type):
 	def __init__(self, id, name, encrypted_file_extension, decrypted_file_extension):
@@ -116,7 +118,7 @@ class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 
 class Migros_Storybox(Simple_Encrypted_File_Device_Type):
 	def __init__(self):
-		super().__init__('hoerbox', 'Migros Storybox', '.smp', '.mp3', [0x66], 0)
+		super().__init__('storybox', 'Migros Storybox', '.smp', '.mp3', [0x66], 0)
 
 DEVICE_TYPES = [
 	Audiocube(),
