@@ -2,6 +2,8 @@
 
 CHUNK_SIZE = 0x10000
 
+NEWLINE = '\n'
+
 def value_with_default(value, default_value):
 	return (value if (value != None) else default_value)
 
@@ -11,6 +13,10 @@ def read_file_in_chunks(input_file):
 		if (not chunk):
 			break
 		yield chunk
+
+def generate_chunks(sliceable, chunk_size):
+	for index in range(0, len(sliceable), chunk_size):
+		yield sliceable[index:(index + chunk_size)]
 
 def convert_file(input_file, output_file, convert_chunk_function):
 	offset = 0
@@ -63,6 +69,9 @@ def create_tagwriter_csv_file_content(records):
 		['Type (Link, Text)', 'Content (http://....)', 'URI type (URI, URL, File...)', 'Description', 'Interaction counter', 'UID mirror', 'Interaction counter mirror'],
 		*[record_to_tagwriter_csv_row(record) for record in records]
 	], delimiter=';')
+
+def create_mct_file_content(nfc_bytes):
+	return NEWLINE.join(f"+Sector: {sector_index}{NEWLINE}{NEWLINE.join(block_bytes.hex().upper() for block_bytes in generate_chunks(sector_bytes, 16))}" for sector_index, sector_bytes in enumerate(generate_chunks(nfc_bytes, 64)))
 
 def write_text_file(text_file_path, content):
 	with open(text_file_path, 'w') as text_file:
@@ -120,11 +129,6 @@ class Encrypted_File_Device_Type(Device_Type):
 		raise NotImplementedError('encrypt_chunk() not implemented')
 	def encrypt(self, args):
 		convert_file_paths(args.input_file_paths, args.output_file_pattern, self.encrypt_chunk)
-		#import cProfile
-		#input_file_paths = args.input_file_paths
-		#output_file_paths = args.output_file_pattern
-		#encrypt_chunk = self.encrypt_chunk
-		#cProfile.run('convert_file_paths(input_file_paths, output_file_pattern, encrypt_chunk)')
 	def decrypt_chunk(self, input_chunk, output_chunk, offset):
 		raise NotImplementedError('decrypt_chunk() not implemented')
 	def decrypt(self, args):
@@ -158,9 +162,49 @@ class Simple_Encrypted_File_Device_Type(Encrypted_File_Device_Type):
 			output_chunk[index] = output_byte
 			index -= 1
 
-class Audiocube(Simple_Encrypted_File_Device_Type):
+class Hachette(Simple_Encrypted_File_Device_Type):
 	def __init__(self):
-		super().__init__('audiocube', 'Audiocube', [0x51, 0x23, 0x98, 0x56], 0, '.SMP', '.mp3')
+		super().__init__('hachette', 'Hachette', [0x51, 0x23, 0x98, 0x56], 0, '.smp', '.mp3')
+	def add_commands(self, command_subparsers):
+		super().add_commands(command_subparsers)
+		create_nfc_file_parser = command_subparsers.add_parser(
+			'create_nfc_file',
+			description = 'Create a NFC tag content file, in order to create a compatible ("Mifare Classic") NFC tag via the "MIFARE Classic Tool" (https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool) smartphone app',
+			formatter_class = ArgumentDefaultsHelpFormatter,
+		)
+		create_nfc_file_parser.add_argument(
+			'directory_id',
+			type = str,
+			default = '01',
+			help = 'The directory ID, a hexadecimal string in range 00...FF',
+		)
+		create_nfc_file_parser.add_argument(
+			'file_id',
+			type = str,
+			help = 'The file ID, a hexadecimal string in range 0000...FFFF',
+		)
+		create_nfc_file_parser.add_argument(
+			'name',
+			type = str,
+			nargs = '?',
+			help = 'The name/label for this NFC tag. Determines the output file name. Optional, defaults to "TMB{directory_id}_T{file_id}"',
+		)
+		create_nfc_file_parser.set_defaults(func=self.create_nfc_file)
+	def create_nfc_file(self, args):
+		directory_id = int(args.directory_id, 16)
+		file_id = int(args.file_id, 16)
+		name = value_with_default(args.name, 'TMB{directory_id:02X}_T{file_id:04X}'.format(
+			directory_id = directory_id,
+			file_id = file_id,
+		))
+		output_file_path = '{name}.mct'.format(
+			name = name,
+		)
+		SECTOR_TRAILER_BLOCK_BYTES = bytes([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
+		ZERO_BLOCK_BYTES = bytes(16)
+		id_block_bytes = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x19, 0x01, 0x01, directory_id, (file_id >> 8), (file_id & 0xFF)])
+		nfc_bytes = (ZERO_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES)
+		write_text_file(output_file_path, create_mct_file_content(nfc_bytes))
 
 class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 	def __init__(self):
@@ -169,35 +213,37 @@ class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 		super().add_commands(command_subparsers)
 		create_nfc_file_parser = command_subparsers.add_parser(
 			'create_nfc_file',
-			description = 'Create a NFC tag content (.csv) file, to be written via the "NXP TagWriter" app',
+			description = 'Create a NFC tag content file, in order to create a compatible ("NTAG213") NFC tag via the "NFC TagWriter by NXP" (https://play.google.com/store/apps/details?id=com.nxp.nfc.tagwriter) smartphone app',
 			formatter_class = ArgumentDefaultsHelpFormatter,
 		)
 		create_nfc_file_parser.add_argument(
-			'audio_file_id',
+			'file_id',
 			type = str,
-			help = 'The audio file ID, a hexadecimal string in range 0000...FFFF. This value determines which audio file will be played if the NFC tag is placed on the device',
+			help = 'The file ID, a hexadecimal string in range 0000...FFFF',
 		)
 		create_nfc_file_parser.add_argument(
-			'audio_file_description',
+			'name',
 			type = str,
 			nargs = '?',
-			help = 'The audio file description. Optional, determines which text will be shown in the "NXP TagWriter" app',
+			help = 'The name/label for this NFC tag. Determines the output file name. Optional, defaults to "L{file_id}"',
 		)
 		create_nfc_file_parser.set_defaults(func=self.create_nfc_file)
 	def create_nfc_file(self, args):
-		audio_file_id = int(args.audio_file_id, 16)
-		description = value_with_default(args.audio_file_description, 'L{:04X}'.format(audio_file_id))
-		csv_file_path = '{description}.csv'.format(
-			description = description,
+		file_id = int(args.file_id, 16)
+		name = value_with_default(args.name, 'L{file_id:04X}'.format(
+			file_id = file_id,
+		))
+		output_file_path = '{name}.csv'.format(
+			name = name,
 		)
-		write_text_file(csv_file_path, create_tagwriter_csv_file_content([{
+		write_text_file(output_file_path, create_tagwriter_csv_file_content([{
 			'type': 'Text',
 			'content': '02200408{file_id_high:02X}{file_id_low:02X}00'.format(
-				file_id_high = ((audio_file_id >> 8) & 0xFF),
-				file_id_low = (audio_file_id & 0xFF),
+				file_id_high = ((file_id >> 8) & 0xFF),
+				file_id_low = (file_id & 0xFF),
 			),
 			'uri_type': 'en',
-			'description': description,
+			'description': name,
 			'interaction_counter': 'no',
 			'uid_mirror': 'no',
 			'interaction_counter_mirror': 'no',
@@ -208,7 +254,7 @@ class Migros_Storybox(Simple_Encrypted_File_Device_Type):
 		super().__init__('storybox', 'Migros Storybox', [0x66], 0, '.smp', '.mp3')
 
 DEVICE_TYPES = [
-	Audiocube(),
+	Hachette(),
 	LIDL_Storyland(),
 	Migros_Storybox(),
 ]
@@ -219,7 +265,7 @@ DEVICE_TYPES = [
 if __name__ == '__main__':
 	from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 	argument_parser = ArgumentParser(
-		description = 'Toolbox for Audio-Cubes. For more information, see https://github.com/oyooyo/audiocube',
+		description = 'Toolbox for "Audio-Cubes". For more information, see https://github.com/oyooyo/audiocube',
 		formatter_class = ArgumentDefaultsHelpFormatter,
 	)
 	device_type_subparsers = argument_parser.add_subparsers(

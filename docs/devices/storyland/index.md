@@ -1,10 +1,12 @@
 # LIDL Storyland
 
-![lidl_storyland-image-0004-512x512](lidl_storyland-image-0004-512x512.jpg)
+![](image-0004-512x512.jpg)
 
 The "[LIDL Storyland](https://www.lidl-hellas.gr/storyland)" is a device sold in greek LIDL stores for 9,99 €. Figures are sold separately for 1,99 € each.
 
 ## Program usage
+
+### Show general command overview
 
 ```sh
 $ audiocube.py storyland --help
@@ -22,7 +24,7 @@ optional arguments:
 
 ### Encrypt/Convert .mp3 files to .SMP
 
-To encrypt/convert .mp3 file(s) to the .SMP format that the files stored on the device need to have, use the "encrypt" command:
+To encrypt/convert .mp3 file(s) to the .SMP format that the files stored on the device need to have, use the `encrypt` command:
 
 ```sh
 $ audiocube.py storyland encrypt --help
@@ -37,14 +39,6 @@ optional arguments:
   -h, --help            show this help message and exit
   --output_file_pattern OUTPUT_FILE_PATTERN, -ofp OUTPUT_FILE_PATTERN
                         Pattern for the output filenames (default: {name}.SMP)
-```
-
-For example, to convert files L0010.mp3 and L0011.mp3 to L0010.SMP and L0011.SMP:
-
-```sh
-$ audiocube.py storyland encrypt L0010.mp3 L0011.mp3
-"L0010.mp3" -> "L0010.SMP"
-"L0011.mp3" -> "L0011.SMP"
 ```
 
 ### Decrypt/Convert .SMP files to .mp3
@@ -80,17 +74,16 @@ To create a custom NFC tag/figure via the "NFC TagWriter by NXP" app that will p
 
 ```sh
 $ audiocube.py storyland create_nfc_file --help
-usage: audiocube.py storyland create_nfc_file [-h] audio_file_id [audio_file_description]
+usage: audiocube.py storyland create_nfc_file [-h] file_id [name]
 
-Create a NFC tag content (.csv) file, to be written via the "NFC TagWriter by NXP" app
+Create a NFC tag content file, in order to create a compatible ("NTAG213") NFC tag via the "NFC TagWriter by NXP" (https://play.google.com/store/apps/details?id=com.nxp.nfc.tagwriter) smartphone app
 
 positional arguments:
-  audio_file_id         The audio file ID, a hexadecimal string in range 0000...FFFF. This value determines which audio file will be played if the NFC tag is placed on the device
-  audio_file_description
-                        The audio file description. Optional, determines which text will be shown in the "NXP TagWriter" app (default: None)
+  file_id     The file ID, a hexadecimal string in range 0000...FFFF
+  name        The name/label for this NFC tag. Determines the output file name. Optional, defaults to "L{file_id}" (default: None)
 
 optional arguments:
-  -h, --help            show this help message and exit
+  -h, --help  show this help message and exit
 ```
 
 For example, to create a NFC tag that will play audio file "L0014.SMP", and shows up as "Some description" in the "NFC TagWriter by NXP" app, use:
@@ -138,12 +131,12 @@ ToDo
 
 ## Photos
 
-![lidl_storyland-image-0001](lidl_storyland-image-0001.jpg)
-![lidl_storyland-image-0002](lidl_storyland-image-0002.jpg)
-![lidl_storyland-image-0003](lidl_storyland-image-0003.jpg)
-![lidl_storyland-image-0004](lidl_storyland-image-0004.jpg)
-![lidl_storyland-image-0005](lidl_storyland-image-0005.jpg)
-![lidl_storyland-image-0006](lidl_storyland-image-0006.jpg)
+![](image-0001.jpg)
+![](image-0002.jpg)
+![](image-0003.jpg)
+![](image-0004.jpg)
+![](image-0005.jpg)
+![](image-0006.jpg)
 
 ## Credits
 
