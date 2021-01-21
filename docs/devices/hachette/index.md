@@ -4,9 +4,9 @@
 
 The device called "*hachette*" here is sold in multiple european countries under different names, by a company named [hachette](https://www.hachettebookgroup.com/) *(Click on the name for more information about a particular variant)*:
 
-- In Germany, it is called "*Märchenheld*" ([Homepage](https://maerchenheld-sammlung.de/))
-- In Greece, it is called "*Hxografhmena Paramythia*" ([Homepage](https://www.audiotales.gr/))
-- In Poland, it is called "*Opowiadajki*" ([Homepage](https://opowiadajki.pl/))
+- In Germany, it is called "*[Märchenheld](DE/)*" ([Homepage](https://maerchenheld-sammlung.de/))
+- In Greece, it is called "*[Hxografhmena Paramythia](GR/)*" ([Homepage](https://www.audiotales.gr/))
+- In Poland, it is called "*[Opowiadajki](PL/)*" ([Homepage](https://opowiadajki.pl/))
 - It is apparently also sold in Spain and probably some other european countries as well, but I currently do not have any information on those versions *(If you know about one of these versions, please tell me)*
 
 It is being sold as a collection, with each issue being a bundle of a figure and the affiliated book.
