@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no" />
+		<title>LIDL Storyland NFC Tag Writer</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+	</head>
+	<body style="background-color:#E0D8D0;">
+		<div class="container-fluid">
+			<div class="h2">LIDL Storyland<br />NFC Tag Writer</div>
+			<p>Select predefined NFC tag...</p>
+			<select id="predefined_nfc_tags" class="form-select">
+				<option selected>(Click here for options)</option>
+			</select>
+			<p class="my-3">...or enter custom NFC tag data:</p>
+			<div class="my-3">
+				<input id="nfc_tag_data" type="text" class="form-control" />
+			</div>
+			<div class="d-grid">
+				<button id="write_nfc_tag_button" type="button" class="btn btn-primary">Write NFC tag</button>
+			</div>
+			<output id="message" class="my-3" />
+			<script src="index.js"></script>
+		</div>
+	</body>
+</html>
