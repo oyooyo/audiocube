@@ -219,7 +219,7 @@ class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 		create_nfc_file_parser.add_argument(
 			'file_id',
 			type = str,
-			help = 'The file ID, a hexadecimal string in range 0000...FFFF',
+			help = 'The file ID, a four-character ASCII string',
 		)
 		create_nfc_file_parser.add_argument(
 			'name',
@@ -229,8 +229,8 @@ class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 		)
 		create_nfc_file_parser.set_defaults(func=self.create_nfc_file)
 	def create_nfc_file(self, args):
-		file_id = int(args.file_id, 16)
-		name = value_with_default(args.name, 'L{file_id:04X}'.format(
+		file_id = ('0000' + args.file_id)[-4:]
+		name = value_with_default(args.name, 'L{file_id}'.format(
 			file_id = file_id,
 		))
 		output_file_path = '{name}.csv'.format(
@@ -238,9 +238,8 @@ class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 		)
 		write_text_file(output_file_path, create_tagwriter_csv_file_content([{
 			'type': 'Text',
-			'content': '02200408{file_id_high:02X}{file_id_low:02X}00'.format(
-				file_id_high = ((file_id >> 8) & 0xFF),
-				file_id_low = (file_id & 0xFF),
+			'content': '02200408{file_id}00'.format(
+				file_id = file_id,
 			),
 			'uri_type': 'en',
 			'description': name,
