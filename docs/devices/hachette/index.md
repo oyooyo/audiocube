@@ -88,7 +88,7 @@ $ audiocube.py hachette decrypt T0010.smp T0011.smp
 
 #### Step 1: Create a .mct file
 
-The [nfc](nfc/) folder contains ready-to-use `.mct` files that should be sufficient if you just want to create a backup NFC tag for an existing figure, in which case you can skip this step. If however you want to create your own fairytales, you should follow this section to create your own custom NFC tag for this fairytale.
+The [docs/devices/hachette/nfc](https://github.com/oyooyo/audiocube/tree/master/docs/devices/hachette/nfc) directory contains ready-to-use `.mct` files that should be sufficient if you just want to create a backup NFC tag for an existing figure, in which case you can skip this step. If however you want to create your own fairytales, you should follow this section to create your own custom NFC tag for this fairytale.
 
 To create a compatible NFC tag, start by using the `create_nfc_file` command:
 
