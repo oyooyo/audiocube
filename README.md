@@ -6,8 +6,8 @@ The following devices are currently supported *(click on picture or ID for more 
 
 Picture | ID | Name | Description
 --- | --- | --- | ---
-[![](docs/devices/hachette/image-0001-256x256.jpg)](devices/hachette/) | [hachette](devices/hachette/) | *(Various)* | Sold in multiple european countries under localized names:<br />- "*Märchenheld*" in Germany<br />- "*Hxografhmena Paramythia*" in Greece<br />- "*[Opowiadajki](https://opowiadajki.pl/)*" in Poland
-[![](docs/devices/storyland/image-0001-256x256.jpg)](devices/storyland/) | [storyland](devices/storyland/) | LIDL Storyland | Sold by LIDL in Greece
-[(No image yet)](devices/storybox/) | [storybox](devices/storybox/) | Migros Storybox | Sold by Migros in Switzerland
+[![](docs/devices/hachette/image-0001-256x256.jpg)](docs/devices/hachette/) | [hachette](docs/devices/hachette/) | *(Various)* | Sold in multiple european countries under localized names:<br />- "*Märchenheld*" in Germany<br />- "*Hxografhmena Paramythia*" in Greece<br />- "*[Opowiadajki](https://opowiadajki.pl/)*" in Poland
+[![](docs/devices/storyland/image-0001-256x256.jpg)](docs/devices/storyland/) | [storyland](docs/devices/storyland/) | LIDL Storyland | Sold by LIDL in Greece
+[(No image yet)](docs/devices/storybox/) | [storybox](docs/devices/storybox/) | Migros Storybox | Sold by Migros in Switzerland
 
-Please visit (https://oyooyo.github.io/audiocube)[https://oyooyo.github.io/audiocube] for more information.
+Please visit (the project's website)[https://oyooyo.github.io/audiocube] for more information.
