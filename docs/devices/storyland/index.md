@@ -14,7 +14,7 @@ To use it...
 3. Click on the "*Write NFC Tag*" button
 4. Place a NTAG213 NFC tag on your smartphone's NFC reader
 
-The only problem with this approach is that this approach requires Chrome v89 or later, but the current official/stable version is still v88 right now. So you need to either wait a few weeks for Chrome v89 becoming the official/stable version, or install [Chrome Dev](https://play.google.com/store/apps/details?id=com.chrome.dev).
+The only problem with this approach is that it requires Chrome v89 or later, but the current official/stable version is still v88 right now. So you need to either wait a few weeks for Chrome v89 becoming the official/stable version, or install [Chrome Dev](https://play.google.com/store/apps/details?id=com.chrome.dev).
 
 ## Program usage
 
