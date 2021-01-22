@@ -30,7 +30,7 @@ const setup = async () => {
 				output_message('Place NTAG213 NFC tag over NFC tag reader');
 				const nfc_tag_data = nfc_tag_data_element.value.trim();
 				await write_text_record_nfc_tag(nfc_tag_data);
-				output_message('NFC Tag written successfully!');
+				output_message(`NFC Tag written successfully! Placing this NFC tag on the device will trigger playback of file L${nfc_tag_data.slice(8, 12)}.SMP`);
 			} catch(error) {
 				output_message(`Error: ${error}`);
 			}
@@ -46,6 +46,13 @@ const setup = async () => {
 		}
 		predefined_nfc_tags_element.onchange = (event) => {
 			nfc_tag_data_element.value = predefined_nfc_tags_element.value;
+		}
+		const file_id_element = get_element('file_id');
+		file_id_element.onchange = (event) => {
+			const file_id = file_id_element.value.trim();
+			if (/^.{4}$/.test(file_id)) {
+				nfc_tag_data_element.value = `02200408${file_id}00`;
+			}
 		}
 	} catch(error) {
 		output_message(`Error: ${error}`);

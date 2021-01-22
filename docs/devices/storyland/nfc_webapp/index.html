@@ -8,15 +8,20 @@
 	</head>
 	<body style="background-color:#E0D8D0;">
 		<div class="container-fluid">
-			<div class="h2">LIDL Storyland<br />NFC Tag Writer</div>
-			<p>Select predefined NFC tag...</p>
+			<div class="h2">LIDL Storyland NFC Tag Writer</div>
+			<p><span class="fw-bold">Either</span> select predefined NFC tag...</p>
 			<select id="predefined_nfc_tags" class="form-select">
 				<option selected>(Click here for options)</option>
 			</select>
-			<p class="my-3">...or enter custom NFC tag data:</p>
+			<p class="my-3">...<span class="fw-bold">or</span> enter a custom file ID (=a sequence of four arbitrary ASCII characters, but better stick to upper-case letters and digits):</p>
+			<div class="my-3">
+				<input id="file_id" type="text" class="form-control" pattern=".{4}" />
+			</div>
+			<p class="my-3">...<span class="fw-bold">or</span> enter completely custom NFC tag data (only if you really know what you're doing):</p>
 			<div class="my-3">
 				<input id="nfc_tag_data" type="text" class="form-control" />
 			</div>
+			<p class="my-3"><span class="fw-bold">Then</span> click:</p>
 			<div class="d-grid">
 				<button id="write_nfc_tag_button" type="button" class="btn btn-primary">Write NFC tag</button>
 			</div>
