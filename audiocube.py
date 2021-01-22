@@ -163,8 +163,6 @@ class Simple_Encrypted_File_Device_Type(Encrypted_File_Device_Type):
 			index -= 1
 
 class Hachette(Simple_Encrypted_File_Device_Type):
-	def __init__(self):
-		super().__init__('hachette', 'Hachette', [0x51, 0x23, 0x98, 0x56], 0, '.smp', '.mp3')
 	def add_commands(self, command_subparsers):
 		super().add_commands(command_subparsers)
 		create_nfc_file_parser = command_subparsers.add_parser(
@@ -205,6 +203,14 @@ class Hachette(Simple_Encrypted_File_Device_Type):
 		id_block_bytes = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x19, 0x01, 0x01, directory_id, (file_id >> 8), (file_id & 0xFF)])
 		nfc_bytes = (ZERO_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES)
 		write_text_file(output_file_path, create_mct_file_content(nfc_bytes))
+
+class Hachette_Blue(Hachette):
+	def __init__(self):
+		super().__init__('hachette', 'Hachette (Blue version)', [0x51, 0x23, 0x98, 0x56], 0, '.smp', '.mp3')
+
+class Hachette_Green(Hachette):
+	def __init__(self):
+		super().__init__('hachette_green', 'Hachette (Green version)', [0x18, 0x08, 0x20, 0x20], 0, '.smp', '.mp3')
 
 class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 	def __init__(self):
@@ -253,7 +259,8 @@ class Migros_Storybox(Simple_Encrypted_File_Device_Type):
 		super().__init__('storybox', 'Migros Storybox', [0x66], 0, '.smp', '.mp3')
 
 DEVICE_TYPES = [
-	Hachette(),
+	Hachette_Blue(),
+	Hachette_Green(),
 	LIDL_Storyland(),
 	Migros_Storybox(),
 ]
