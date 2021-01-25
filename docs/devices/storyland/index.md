@@ -53,6 +53,14 @@ optional arguments:
                         Pattern for the output filenames (default: {name}.SMP)
 ```
 
+For example, to encrypt/convert files L0010.mp3 and L0011.mp3 to L0010.SMP and L0011.SMP:
+
+```sh
+$ audiocube.py storyland encrypt L0010.mp3 L0011.mp3
+"L0010.mp3" -> "L0010.SMP"
+"L0011.mp3" -> "L0011.SMP"
+```
+
 ### Decrypt/Convert .SMP files to .mp3
 
 To decrypt/convert .SMP file(s) stored on the device to regular MP3 file(s), use the "decrypt" command:
@@ -72,7 +80,7 @@ optional arguments:
                         Pattern for the output filenames (default: {name}.mp3)
 ```
 
-For example, to convert files L0010.SMP and L0011.SMP to L0010.mp3 and L0011.mp3:
+For example, to decrypt/convert files L0010.SMP and L0011.SMP to L0010.mp3 and L0011.mp3:
 
 ```sh
 $ audiocube.py storyland decrypt L0010.SMP L0011.SMP
