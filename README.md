@@ -1,6 +1,6 @@
 # audiocube
 
-Software toolbox for a few similar devices I call "audio cubes": More or less cube-shaped audio players with an integrated speaker, that will automatically start playing fairytales from their internal memory when one of the affiliated figures (containing a hidden NFC tag) is placed on top of the device.
+Software toolbox for a few similar devices I call "audio cubes":  More or less, cube-shaped audio players with an integrated speaker, that will automatically start playing fairytales from their internal memory when one of the affiliated figures (containing a hidden NFC tag), is placed on top of the device.
 
 Please visit [the project's website](https://oyooyo.github.io/audiocube) for more information - the links below might be broken.
 
