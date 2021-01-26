@@ -163,6 +163,12 @@ class Simple_Encrypted_File_Device_Type(Encrypted_File_Device_Type):
 			index -= 1
 
 class Hachette(Simple_Encrypted_File_Device_Type):
+	SECTOR_TRAILER_BLOCK_BYTES = bytes([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
+	ZERO_BLOCK_BYTES = bytes(16)
+
+class Hachette_Blue(Hachette):
+	def __init__(self):
+		super().__init__('hachette', 'Hachette (Blue version)', [0x51, 0x23, 0x98, 0x56], 0, '.smp', '.mp3')
 	def add_commands(self, command_subparsers):
 		super().add_commands(command_subparsers)
 		create_nfc_file_parser = command_subparsers.add_parser(
@@ -198,19 +204,43 @@ class Hachette(Simple_Encrypted_File_Device_Type):
 		output_file_path = '{name}.mct'.format(
 			name = name,
 		)
-		SECTOR_TRAILER_BLOCK_BYTES = bytes([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x07, 0x80, 0x69, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])
-		ZERO_BLOCK_BYTES = bytes(16)
 		id_block_bytes = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x19, 0x01, 0x01, directory_id, (file_id >> 8), (file_id & 0xFF)])
-		nfc_bytes = (ZERO_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + ZERO_BLOCK_BYTES + ZERO_BLOCK_BYTES + SECTOR_TRAILER_BLOCK_BYTES)
+		nfc_bytes = (self.ZERO_BLOCK_BYTES + id_block_bytes + self.ZERO_BLOCK_BYTES + self.SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + self.ZERO_BLOCK_BYTES + self.ZERO_BLOCK_BYTES + self.SECTOR_TRAILER_BLOCK_BYTES)
 		write_text_file(output_file_path, create_mct_file_content(nfc_bytes))
-
-class Hachette_Blue(Hachette):
-	def __init__(self):
-		super().__init__('hachette', 'Hachette (Blue version)', [0x51, 0x23, 0x98, 0x56], 0, '.smp', '.mp3')
 
 class Hachette_Green(Hachette):
 	def __init__(self):
 		super().__init__('hachette_green', 'Hachette (Green version)', [0x18, 0x08, 0x20, 0x20], 0, '.smp', '.mp3')
+	def add_commands(self, command_subparsers):
+		super().add_commands(command_subparsers)
+		create_nfc_file_parser = command_subparsers.add_parser(
+			'create_nfc_file',
+			description = 'Create a NFC tag content file, in order to create a compatible ("Mifare Classic") NFC tag via the "MIFARE Classic Tool" (https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool) smartphone app',
+			formatter_class = ArgumentDefaultsHelpFormatter,
+		)
+		create_nfc_file_parser.add_argument(
+			'file_id',
+			type = str,
+			help = 'The file ID, a hexadecimal string in range 0000...FFFF',
+		)
+		create_nfc_file_parser.add_argument(
+			'name',
+			type = str,
+			nargs = '?',
+			help = 'The name/label for this NFC tag. Determines the output file name. Optional, defaults to "TMB-ABC_T{file_id}"',
+		)
+		create_nfc_file_parser.set_defaults(func=self.create_nfc_file)
+	def create_nfc_file(self, args):
+		file_id = int(args.file_id, 16)
+		name = value_with_default(args.name, 'TMB-ABC_T{file_id:04X}'.format(
+			file_id = file_id,
+		))
+		output_file_path = '{name}.mct'.format(
+			name = name,
+		)
+		id_block_bytes = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x20, 0x01, 0x01, 0x01, (file_id >> 8), (file_id & 0xFF)])
+		nfc_bytes = (self.ZERO_BLOCK_BYTES + id_block_bytes + self.ZERO_BLOCK_BYTES + self.SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + self.ZERO_BLOCK_BYTES + self.ZERO_BLOCK_BYTES + self.SECTOR_TRAILER_BLOCK_BYTES)
+		write_text_file(output_file_path, create_mct_file_content(nfc_bytes))
 
 class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 	def __init__(self):
