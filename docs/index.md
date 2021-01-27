@@ -1,6 +1,6 @@
 # audiocube
 
-Software toolbox for a few similar devices I call "audio cubes": More or less cube-shaped audio players with an integrated speaker, that will automatically start playing fairytales from their internal memory when one of the affiliated figures (containing a hidden NFC tag) is placed on top of the device.
+Software toolbox for a few similar devices I call "audio cubes": More or less cube-shaped audio players with an integrated speaker, that will automatically start playing fairytales from their internal memory when one of the affiliated figures (containing a hidden NFC tag) is placed on top of the device. All devices seen so for use audio files with a `.smp` extension.
 
 The following devices are currently supported *(click on picture or ID for more information)*:
 
