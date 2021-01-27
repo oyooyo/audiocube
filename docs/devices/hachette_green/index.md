@@ -1,4 +1,4 @@
-# hachette
+# Hachette (Green version)
 
 ![](image-0001-512x512.jpg)
 
