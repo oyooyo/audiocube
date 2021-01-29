@@ -10,3 +10,7 @@ Picture | ID | Name | Description
 [![](https://oyooyo.github.io/audiocube/devices/hachette_green/image-0001-256x256.jpg)](https://oyooyo.github.io/audiocube/devices/hachette_green/) | [hachette_green](https://oyooyo.github.io/audiocube/devices/hachette_green/) | *(Various)* | Sold in multiple european countries under localized names:<br />- "*[Mi primer ABECEDARIO](https://www.salvat.com/colecciones/mi-primer-abecedario/)*"
 [![](https://oyooyo.github.io/audiocube/devices/storyland/image-0001-256x256.jpg)](https://oyooyo.github.io/audiocube/devices/storyland/) | [storyland](https://oyooyo.github.io/audiocube/devices/storyland/) | LIDL Storyland | Sold by LIDL in Greece
 [![](https://oyooyo.github.io/audiocube/devices/storybox/image-0001-256x256.jpg)](https://oyooyo.github.io/audiocube/devices/storybox/) | [storybox](https://oyooyo.github.io/audiocube/devices/storybox/) | Migros Storybox | Sold by Migros in Switzerland
+
+## Alternatives
+
+- [smp2mp3](https://github.com/ZapDissaster/smp2mp3/) by ZapDissaster is a very similar software tool with a GUI for Windows, that is probably easier to get running for Windows users who have little experience with using command-line tools
