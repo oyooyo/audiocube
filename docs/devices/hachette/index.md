@@ -96,7 +96,6 @@ To create a compatible NFC tag, start by using the `create_nfc_file` command:
 ```sh
 $ audiocube.py hachette create_nfc_file --help
 usage: audiocube.py hachette create_nfc_file [-h] directory_id file_id [name]
-```
 
 Create a NFC tag content file, in order to create a compatible ("Mifare Classic") NFC tag via the "MIFARE Classic Tool" (https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool) smartphone app
 
@@ -107,6 +106,7 @@ positional arguments:
 
 optional arguments:
   -h, --help    show this help message and exit
+```
 
 For example, to create a NFC tag that will play audio file `T0023.smp` in directory `TMB01`:
 
