@@ -1,27 +1,16 @@
-# Hachette (Blue version)
+# Hachette (Green version)
 
 ![](image-0001-512x512.jpg)
-
-The device called "*hachette*" here is sold in multiple european countries under different names, by a company named [hachette](https://www.hachettebookgroup.com/) *(Click on the name for more information about a particular variant)*:
-
-- In Germany, it is called "*[Märchenheld](DE/)*" ([Homepage](https://maerchenheld-sammlung.de/))
-- In Greece, it is called "*[Hxografhmena Paramythia](GR/)*" ([Homepage](https://www.audiotales.gr/))
-- In Poland, it is called "*[Opowiadajki](PL/)*" ([Homepage](https://opowiadajki.pl/))
-- It is apparently also sold in Spain and probably some other european countries as well, but I currently do not have any information on those versions *(If you know about one of these versions, please tell me)*
-
-It is being sold as a collection, with each issue being a bundle of a figure and the affiliated book.
-
-The hardware, encryption, NFC tags etc. seems to be identical in all countries (?).
 
 ## Program usage
 
 ### Show general command overview
 
 ```sh
-$ audiocube.py hachette --help
-usage: audiocube.py hachette [-h] {encrypt,decrypt,create_nfc_file} ...
+$ audiocube.py hachette_green -h
+usage: audiocube.py hachette_green [-h] {encrypt,decrypt,create_nfc_file} ...
 
-Toolbox for "Hachette"
+Toolbox for "Hachette (Green version)"
 
 positional arguments:
   {encrypt,decrypt,create_nfc_file}
@@ -36,8 +25,8 @@ optional arguments:
 To encrypt/convert .mp3 file(s) to the .smp format, use the `encrypt` command:
 
 ```sh
-$ audiocube.py hachette encrypt --help
-usage: audiocube.py hachette encrypt [-h] [--output_file_pattern OUTPUT_FILE_PATTERN] input_file [input_file ...]
+$ audiocube.py hachette_green encrypt -h
+usage: audiocube.py hachette_green encrypt [-h] [--output_file_pattern OUTPUT_FILE_PATTERN] input_file [input_file ...]
 
 Encrypt audio file(s)
 
@@ -53,7 +42,7 @@ optional arguments:
 For example, to encrypt/convert files T0010.mp3 and T0011.mp3 to T0010.smp and T0011.smp:
 
 ```sh
-$ audiocube.py hachette encrypt T0010.mp3 T0011.mp3
+$ audiocube.py hachette_green encrypt T0010.mp3 T0011.mp3
 "T0010.mp3" -> "T0010.smp"
 "T0011.mp3" -> "T0011.smp"
 ```
@@ -63,8 +52,8 @@ $ audiocube.py hachette encrypt T0010.mp3 T0011.mp3
 To decrypt/convert .smp file(s) to the .smp format, use the `decrypt` command:
 
 ```sh
-$ audiocube.py hachette decrypt --help
-usage: audiocube.py hachette decrypt [-h] [--output_file_pattern OUTPUT_FILE_PATTERN] input_file [input_file ...]
+$ audiocube.py hachette_green decrypt -h
+usage: audiocube.py hachette_green decrypt [-h] [--output_file_pattern OUTPUT_FILE_PATTERN] input_file [input_file ...]
 
 Decrypt audio file(s)
 
@@ -80,7 +69,7 @@ optional arguments:
 For example, to decrypt/convert files T0010.smp and T0011.smp to T0010.mp3 and T0011.mp3:
 
 ```sh
-$ audiocube.py hachette decrypt T0010.smp T0011.smp
+$ audiocube.py hachette_green decrypt T0010.smp T0011.smp
 "T0010.smp" -> "T0010.mp3"
 "T0011.smp" -> "T0011.mp3"
 ```
@@ -89,32 +78,32 @@ $ audiocube.py hachette decrypt T0010.smp T0011.smp
 
 #### Step 1: Create a .mct file
 
-The [docs/devices/hachette/nfc](https://github.com/oyooyo/audiocube/tree/master/docs/devices/hachette/nfc) directory contains ready-to-use `.mct` files that should be sufficient if you just want to create a backup NFC tag for an existing figure, in which case you can skip this step. If however you want to create your own fairytales, you should follow this section to create your own custom NFC tag for this fairytale.
+The [docs/devices/hachette_green/nfc](https://github.com/oyooyo/audiocube/tree/master/docs/devices/hachette_green/nfc) directory contains ready-to-use `.mct` files that should be sufficient if you just want to create a backup NFC tag for an existing figure, in which case you can skip this step. If however you want to create your own fairytales, you should follow this section to create your own custom NFC tag for this fairytale.
 
 To create a compatible NFC tag, start by using the `create_nfc_file` command:
 
 ```sh
-$ audiocube.py hachette create_nfc_file --help
-usage: audiocube.py hachette create_nfc_file [-h] directory_id file_id [name]
+$ audiocube.py hachette_green create_nfc_file -h
+usage: audiocube.py hachette_green create_nfc_file [-h] file_id [name]
 
-Create a NFC tag content file, in order to create a compatible ("Mifare Classic") NFC tag via the "MIFARE Classic Tool" (https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool) smartphone app
+Create a NFC tag content file, in order to create a compatible ("Mifare Classic") NFC tag via the "MIFARE Classic Tool" (https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool) smartphone
+app
 
 positional arguments:
-  directory_id  The directory ID, a hexadecimal string in range 00...FF
-  file_id       The file ID, a hexadecimal string in range 0000...FFFF
-  name          The name/label for this NFC tag. Determines the output file name. Optional, defaults to "TMB{directory_id}_T{file_id}" (default: None)
+  file_id     The file ID, a hexadecimal string in range 0000...FFFF
+  name        The name/label for this NFC tag. Determines the output file name. Optional, defaults to "TMB-ABC_T{file_id}" (default: None)
 
 optional arguments:
-  -h, --help    show this help message and exit
+  -h, --help  show this help message and exit
 ```
 
-For example, to create a NFC tag that will play audio file `T0023.smp` in directory `TMB01`:
+For example, to create a NFC tag that will play audio file `T0023.smp` in directory `TMB-ABC`:
 
 ```sh
-$ audiocube.py hachette create_nfc_file 01 0023
+$ audiocube.py hachette_green create_nfc_file 0023
 ```
 
-The above command will create a file called `TMB01_T0023.mct`.
+The above command will create a file called `TMB-ABC_T0023.mct`.
 
 #### Step 2: Write the .mct file to a *Mifare Classic* NFC tag
 
@@ -142,7 +131,7 @@ The device doesn't seem to be very picky about the MP3 files. The files on the g
 ### Encryption
 
 The MP3 files the device plays are encrypted with a simple algorithm:
-1. The whole file is then XORed with the byte array \[0x51, 0x23, 0x98, 0x56]\]
+1. The whole file is then XORed with the byte array \[0x18, 0x08, 0x20, 0x20\]
 
 ## NFC Tags
 
@@ -151,8 +140,8 @@ The device uses `Mifare Classic 1k` NFC tags.
 ## Photos
 
 ![](image-0001.jpg)
-![](image-0002.jpg)
 
 ## Credits
 
-"**Marc D.**" figured out and [published](https://www.mikrocontroller.net/topic/503014) all relevant information about the device
+"**Cean D.**" provided information about the device, the figures and the NFC tags
+"**Nikolas M.**" provided a nice photo of the device and information about the device

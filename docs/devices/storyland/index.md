@@ -2,7 +2,19 @@
 
 ![](image-0004-512x512.jpg)
 
-The "[LIDL Storyland](https://www.lidl-hellas.gr/storyland)" is a device sold in greek LIDL stores for 9,99 €. Figures are sold separately for 1,99 € each.
+The "[LIDL Storyland](https://www.lidl-hellas.gr/storyland)" is a device sold in greek LIDL stores for 9,99 €.
+
+## NFC Tag Writer WebApp
+
+If you want to create your own NFC tags/figures, for example because you want to add your own fairy tales and create your own associated figures that will trigger their playback, then there are multiple ways to achieve this. Probably the easiest way is by using a small WebApp that was made for this purpose.
+
+To use it...
+1. Visit the [LIDL Storyland NFC Tag Writer website](https://oyooyo.github.io/audiocube/devices/storyland/nfc_webapp/) on an Android smartphone with NFC and Chrome webbrowser
+2. *Either* select one of the predefined NFC tags (in case you want to create a NFC tag that triggers the playback of one of the official fairy tales by LIDL) *or* enter a custom four-character file ID
+3. Click on the "*Write NFC Tag*" button
+4. Place a NTAG213 NFC tag on your smartphone's NFC reader
+
+The only problem with this approach is that it requires Chrome v89 or later, but the current official/stable version is still v88 right now. So you need to either wait a few weeks for Chrome v89 becoming the official/stable version, or install [Chrome Dev](https://play.google.com/store/apps/details?id=com.chrome.dev).
 
 ## Program usage
 
@@ -41,6 +53,14 @@ optional arguments:
                         Pattern for the output filenames (default: {name}.SMP)
 ```
 
+For example, to encrypt/convert files L0010.mp3 and L0011.mp3 to L0010.SMP and L0011.SMP:
+
+```sh
+$ audiocube.py storyland encrypt L0010.mp3 L0011.mp3
+"L0010.mp3" -> "L0010.SMP"
+"L0011.mp3" -> "L0011.SMP"
+```
+
 ### Decrypt/Convert .SMP files to .mp3
 
 To decrypt/convert .SMP file(s) stored on the device to regular MP3 file(s), use the "decrypt" command:
@@ -60,7 +80,7 @@ optional arguments:
                         Pattern for the output filenames (default: {name}.mp3)
 ```
 
-For example, to convert files L0010.SMP and L0011.SMP to L0010.mp3 and L0011.mp3:
+For example, to decrypt/convert files L0010.SMP and L0011.SMP to L0010.mp3 and L0011.mp3:
 
 ```sh
 $ audiocube.py storyland decrypt L0010.SMP L0011.SMP
@@ -70,7 +90,7 @@ $ audiocube.py storyland decrypt L0010.SMP L0011.SMP
 
 ### Create a custom NFC tag
 
-This project contains [a directory](https://github.com/oyooyo/audiocube/tree/master/docs/devices/storyland/nfc) with several ready-to-use .csv files for creating NFC tags that will play the official fairytales/audio files by LIDL.
+This project contains [a directory](https://github.com/oyooyo/audiocube/tree/master/docs/devices/storyland/nfc) with several ready-to-use .csv files for creating NFC tags that will play the official fairy tales/audio files by LIDL.
 
 If however you want to create custom NFC tags that play custom audio files created by yourself, you can use the `create_nfc_file` subcommand to create custom .csv files.
 
@@ -115,13 +135,9 @@ ToDo
 
 ### File format
 
-The audio files that the device plays are ultimately MP3 files. The device is a bit picky though and will not simply play all MP3 files. It is not 100% clear yet what characteristics a MP3 file needs to have to be compatible, but here's a few hints:
+When creating your own .smp files, you first need to modify the .mp3 files, otherwise the device will not play them. The device seems to support all kinds of MP3 bitrates and samplerates, but the MP3 files need to contain a ID3v2.3 tag with "L####" stored in the "title" field using UTF-16 encoding, where "#" can be any valid letter. The file may additionally contain a ID3v1 tag that can be used as one likes.
 
-- The device *might* have problems playing MP3 files with ID3 metadata in the latest version v2.4. The audio files shipped with the device seem to use ID3 version v2.3 instead, so if you have the possibility, it might be a good idea to use ID3v2.3 as well just to avoid any potential problems.
-- It might be necessary to store the filename (without extension, for example "L0016") in the title field of the ID3v2 tag
-- The audio files shipped with the device use a sample rate of 44100 Hz, so that sample rate should be safe to use. However, the device is probably capable of playing all kinds of bit rates and sample rates
-
-See [here](https://github.com/oyooyo/audiocube/issues/1#issuecomment-750953311) for a discussion on this.
+The free software "[Kid3](https://kid3.kde.org/)" for example can be used to do this.
 
 ### Encryption
 
@@ -146,4 +162,4 @@ ToDo
 
 - [bserem](https://github.com/bserem) provided useful information about this and also the "Migros Storybox" device
 - [cratsil1979](https://github.com/cratsil1979) provided lots of useful information, photos etc., details how to create compatible MP3 files etc.
-- [Storylander](https://github.com/Storylander) found out that the device can not only distinguish 100 different files, but millions
+- [Storylander](https://github.com/Storylander) discovered lots of extremely useful information, for example that the device can not only distinguish 100 different files, but millions
