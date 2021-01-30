@@ -121,10 +121,11 @@ The above command will create a file called `TMB01_T0023.mct`.
 In order to actually create the NFC tag from the `.mct` file created in step 1, you need to perform the following steps afterwards:
 
 1. Install the free and open source "[MIFARE Classic Tool](https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool)" smartphone app, if you haven't done so yet
-2. Copy the `.mct` file created in step 1 to directory `/sdcard/MifareClassicTool/dump-files/` on your Android smartphone
+2. Copy the `.mct` file created in step 1 to any directory of your Android smartphone
 3. Open the "[MIFARE Classic Tool](https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool)" app
-4. Click "*Write Tag*"
-5. Click "*Write Dump (Clone)*", then "*Select Dump*"
+4. Click "*TOOLS*" > "*Import/Export/Convert Files*" > "*IMPORT DUMP*" > "*.mct (MIFARE Classic Tool)*" then browse for the `.mct` file and click on it.
+5. Click "*Write Tag*"
+6. Click "*Write Dump (Clone)*", then "*Select Dump*"
 7. Choose the `.mct` file that you created in step 1, then click "*Select Dump*"
 8. Hold the "*Mifare Classic*" NFC tag that you want to write to the location of the NFC reader on the back of your smartphone. You should here a tone and a "*New Tag found (UID:xxxxxxxx)*" message should be displayed
 9. Keep the NFC tag in this position, click "*OK*", then "*Start mapping and write dump*"
