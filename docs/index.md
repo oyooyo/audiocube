@@ -11,6 +11,9 @@ Picture | ID | Name | Description
 [![](https://oyooyo.github.io/audiocube/devices/storyland/image-0001-256x256.jpg)](https://oyooyo.github.io/audiocube/devices/storyland/) | [storyland](https://oyooyo.github.io/audiocube/devices/storyland/) | LIDL Storyland | Sold by LIDL in Greece
 [![](https://oyooyo.github.io/audiocube/devices/storybox/image-0001-256x256.jpg)](https://oyooyo.github.io/audiocube/devices/storybox/) | [storybox](https://oyooyo.github.io/audiocube/devices/storybox/) | Migros Storybox | Sold by Migros in Switzerland
 
+Read [about helper scripts](scripts.md) that can facilitate tasks like encrypting a file with
+a proper ID3 tag.
+
 ## Alternatives
 
 - [smp2mp3](https://github.com/ZapDissaster/smp2mp3/) by ZapDissaster is a very similar software tool with a GUI for Windows, that is probably easier to get running for Windows users who have little experience with using command-line tools
