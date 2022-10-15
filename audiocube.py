@@ -242,6 +242,10 @@ class Hachette_Green(Hachette):
 		nfc_bytes = (self.ZERO_BLOCK_BYTES + id_block_bytes + self.ZERO_BLOCK_BYTES + self.SECTOR_TRAILER_BLOCK_BYTES + id_block_bytes + self.ZERO_BLOCK_BYTES + self.ZERO_BLOCK_BYTES + self.SECTOR_TRAILER_BLOCK_BYTES)
 		write_text_file(output_file_path, create_mct_file_content(nfc_bytes))
 
+class Altaya(Hachette):
+	def __init__(self):
+		super().__init__('altaya', 'Altaya', [0x44, 0x33, 0x22, 0x11], 0, '.smp', '.mp3')
+
 class LIDL_Storyland(Simple_Encrypted_File_Device_Type):
 	def __init__(self):
 		super().__init__('storyland', 'LIDL Storyland', [0x01, 0x80, 0x04, 0x04], 3, '.SMP', '.mp3')
@@ -293,6 +297,7 @@ DEVICE_TYPES = [
 	Hachette_Green(),
 	LIDL_Storyland(),
 	Migros_Storybox(),
+	Altaya(),
 ]
 
 # ----
